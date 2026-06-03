@@ -23,4 +23,4 @@ jobs:
           docker build -t ${DOCKER_USR}/se-web-app:latest .
           docker tag ${DOCKER_USR}/se-web-app:latest ${DOCKER_USR}/se-web-app:$(git rev-parse --short HEAD)
           docker push ${DOCKER_USR}/se-web-app:latest
-          docker push ${DOCKER_USR}/se-web-app:$(git rev-parse --short HEAD
+          docker push ${DOCKER_USR}/se-web-app:$(git rev-parse --short HEAD)
