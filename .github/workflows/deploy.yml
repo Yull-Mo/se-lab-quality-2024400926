@@ -1,0 +1,26 @@
+name: DevOps CI-CD
+on:
+  push:
+    branches: [ main ]
+jobs:
+  build_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取源码
+        uses: actions/checkout@v4
+
+      - name: 执行单元测试
+        run: |
+          pip install -r requirements.txt
+          python test_app.py
+
+      - name: Docker登录、构建并推送镜像
+        env:
+          DOCKER_USR: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKER_PWD: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          docker login -u $DOCKER_USR -p $DOCKER_PWD
+          docker build -t ${DOCKER_USR}/se-web-app:latest .
+          docker tag ${DOCKER_USR}/se-web-app:latest ${DOCKER_USR}/se-web-app:$(git rev-parse --short HEAD)
+          docker push ${DOCKER_USR}/se-web-app:latest
+          docker push ${DOCKER_USR}/se-web-app:$(git rev-parse --short HEAD)
